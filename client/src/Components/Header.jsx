@@ -1,88 +1,73 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-const Header = ()=>{
+const Header = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
-    const [screenWidth, setScreenWidth] = useState(window.innerWidth)
-    useEffect(()=>{
-        const changeWidth = ()=>{
-            setScreenWidth(window.innerWidth)
-        }
-        window.addEventListener('resize', changeWidth)
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 60);
+    };
 
-        return ()=>{
-            window.removeEventListener('resize', changeWidth)
-        }
-    }, [])
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
-    const [hamBtn, setHambtn] = useState(false)
-    const ToggleBtn = ()=>{
-        setHambtn(!hamBtn)
-    }
+  const handleScrollToContact = () => {
+    document.getElementById("footer")?.scrollIntoView({ behavior: "smooth" });
+    setIsMenuOpen(false);
+  };
 
-    useEffect(()=>{
-        const header = document.querySelector('.header')
-        const changeBg = ()=>{
-            if(screenWidth > 768){
-                if(window.scrollY < 150){
-                    header.style.backgroundColor = 'transparent'
-                }
-                else if(window.scrollY >= 150){
-                    header.style.backgroundColor = '#002244'
-                }
-            }
-        }
-        window.addEventListener('scroll', changeBg)
+  const handleScrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    setIsMenuOpen(false);
+  };
 
-        return ()=>{
-            window.removeEventListener('scroll', changeBg)
-        }
-    }, [screenWidth])
+  return (
+    <header className={`header ${isScrolled ? "scrolled" : ""}`}>
+      <div className="header-inner">
+        <Link to="/" className="brand" onClick={handleScrollToTop}>
+          <img src="logo4.svg" alt="MayHelp" />
+          <span>MayHelp</span>
+        </Link>
 
-    const scrollToContact = () => {
-        document.getElementById("footer").scrollIntoView({
-          behavior: "smooth"
-        });
-        setHambtn(false)
-      };
+        <nav className={`nav-links ${isMenuOpen ? "open" : ""}`}>
+          <Link to="/" onClick={handleScrollToTop}>Accueil</Link>
+          <Link to="/services" onClick={() => setIsMenuOpen(false)}>Nos Services</Link>
+          <Link to="/prices" onClick={() => setIsMenuOpen(false)}>Nos tarifs</Link>
+          <button className="ghost-btn" onClick={handleScrollToContact}>Contact</button>
+          <a
+            className="primary-btn"
+            href="https://calendly.com/your-calendly-link"
+            target="_blank"
+            rel="noreferrer"
+            onClick={() => setIsMenuOpen(false)}
+          >
+            Prendre RDV
+          </a>
+        </nav>
 
-      const handleScrollToHome = () => {
-          window.scrollTo({ top: 0, behavior: "smooth" });
-      };
-
-    return(
-        <>
-        {screenWidth > 768 ?
-        <div className="header">
-            <Link to='/'><img src="logo4.svg" /></Link>
-            <div className="links">
-                <Link onClick={handleScrollToHome} to='/'>Accueil</Link>
-                <Link to='/services'>Nos Services</Link>
-                <Link to='/prices'>Nos tarifs</Link>
-                <button onClick={scrollToContact}>Contact</button>
-            </div>
+        <div className="header-actions">
+          <a
+            className="primary-btn"
+            href="https://calendly.com/your-calendly-link"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Prendre RDV
+          </a>
+          <button
+            className="menu-toggle"
+            onClick={() => setIsMenuOpen((prev) => !prev)}
+            aria-label="Toggle navigation"
+          >
+            {isMenuOpen ? "✕" : "☰"}
+          </button>
         </div>
-        :
-        hamBtn ?
-        <>
-        <div className="header">
-            <button value={hamBtn} onClick={ToggleBtn} className="togglebtn">|||</button>
-            <div className="links">
-                <Link onClick={handleScrollToHome} to='/'>Accueil</Link>
-                <Link to='/services'>Nos Services</Link>
-                <Link to='/prices'>Nos tarifs</Link>
-                <button onClick={scrollToContact}>Contact</button>
-            </div>
-        </div>
-        </>
-        :
-        <div className="btnoff">
-        <button value={hamBtn} onClick={ToggleBtn} className="togglebtn2">|||</button>
-        <Link to='/'><img src="logo4.svg" /></Link>
-        </div>
-        }
-        </>
-    )
-}
+      </div>
+    </header>
+  );
+};
 
-export default Header
+export default Header;
