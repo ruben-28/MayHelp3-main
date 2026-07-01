@@ -1,134 +1,108 @@
 import React, { useState } from "react";
 import emailjs from "emailjs-com";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
-  const [lastName, setLastName] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [indicatif, setIndicatif] = useState("");
-  const [phone, setPhone] = useState("");
-  const [message, setMessage] = useState("");
+  const [formData, setFormData] = useState({
+    lastName: "",
+    firstName: "",
+    indicatif: "+972",
+    phone: "",
+    message: ""
+  });
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setLoading(true);
 
+    // Replace with your actual service IDs
     const serviceID = "service_r2x06rs";
     const templateID = "template_z6o3ihp";
     const userID = "otGW8L8uaTqBXqF18";
 
-    const templateParams = {
-      lastName: lastName,
-      firstName: firstName,
-      indicatif: indicatif || "+972",
-      phone: phone,
-      message: message,
-    };
-
-    emailjs
-      .send(serviceID, templateID, templateParams, userID)
-      .then(
-        (response) => {
-          console.log("SUCCESS!", response.status, response.text);
-          alert("Message envoyé avec succès !");
-        },
-        (error) => {
-          console.log("FAILED...", error);
-          alert("Échec de l'envoi du message.");
-        }
-      );
+    emailjs.send(serviceID, templateID, formData, userID)
+      .then(() => {
+        alert("Message envoyé avec succès !");
+        setFormData({ lastName: "", firstName: "", indicatif: "+972", phone: "", message: "" });
+      })
+      .catch((error) => {
+        console.error("FAILED...", error);
+        alert("Échec de l'envoi du message.");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   return (
-    <footer id="footer" className="footer">
-      <div className="footer-inner">
-        <div className="footer-info">
-          <h3>Contactez-nous</h3>
-          <p>
-            Besoin d'aide immédiate ou d'un accompagnement sur-mesure ? Écrivez-nous et nous reviendrons vers vous rapidement.
-          </p>
-          <div className="contact-card">
-            <div className="form-row">
-              <a href="tel:+972 58-739-6562" className="primary-btn" style={{ textAlign: "center" }}>+972 58-739-6562</a>
-              <a href="https://wa.me/972587396562" className="ghost-btn" target="_blank" rel="noreferrer" style={{ textAlign: "center" }}>
-                WhatsApp direct
-              </a>
-            </div>
-            <div className="social-links">
-              <a className="whatsapp" href="https://wa.me/972587396562" aria-label="WhatsApp">
-                <svg className="float-icon" viewBox="0 0 176 176" xmlns="http://www.w3.org/2000/svg"><g dataname="Layer 2"><g dataname="08.whatsapp"><path d="m144.52 173a532.59 532.59 0 0 1 -113 0 32.07 32.07 0 0 1 -28.52-28.48 532.59 532.59 0 0 1 0-113 32.07 32.07 0 0 1 28.48-28.52 532.59 532.59 0 0 1 113 0 32.07 32.07 0 0 1 28.52 28.48 532.59 532.59 0 0 1 0 113 32.07 32.07 0 0 1 -28.48 28.52z" fill="#29a71a"/><g fill="#fff"><path d="m126.8 49.2a54.57 54.57 0 0 0 -87.42 63.13l-5.79 28.11a2.08 2.08 0 0 0 .33 1.63 2.11 2.11 0 0 0 2.24.87l27.55-6.53a54.56 54.56 0 0 0 63.09-87.21zm-8.59 68.56a42.74 42.74 0 0 1 -49.22 8l-3.84-1.9-16.89 4 .05-.21 3.5-17-1.88-3.71a42.72 42.72 0 0 1 7.86-49.59 42.73 42.73 0 0 1 60.42 0 2.28 2.28 0 0 0 .22.22 42.72 42.72 0 0 1 -.22 60.19z"/><path d="m116.71 105.29c-2.07 3.26-5.34 7.25-9.45 8.24-7.2 1.74-18.25.06-32-12.76l-.17-.15c-12.09-11.21-15.23-20.54-14.47-27.94.42-4.2 3.92-8 6.87-10.48a3.93 3.93 0 0 1 6.15 1.41l4.45 10a3.91 3.91 0 0 1 -.49 4l-2.25 2.92a3.87 3.87 0 0 0 -.35 4.32c1.26 2.21 4.28 5.46 7.63 8.47 3.76 3.4 7.93 6.51 10.57 7.57a3.82 3.82 0 0 0 4.19-.88l2.61-2.63a4 4 0 0 1 3.9-1l10.57 3a4 4 0 0 1 2.24 5.91z"/></g></g></g></svg>
-              </a>
-              <a className="instagram" href="https://www.instagram.com/mayhelp.co.il/" aria-label="Instagram">
-                <svg className="float-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><linearGradient id="SVGID_1_" gradientTransform="matrix(0 -1.982 -1.844 0 -132.522 -51.077)" gradientUnits="userSpaceOnUse" x1="-37.106" x2="-26.555" y1="-72.705" y2="-84.047"><stop offset="0" stopColor="#fd5"/><stop offset=".5" stopColor="#ff543e"/><stop offset="1" stopColor="#c837ab"/></linearGradient><path d="m1.5 1.633c-1.886 1.959-1.5 4.04-1.5 10.362 0 5.25-.916 10.513 3.878 11.752 1.497.385 14.761.385 16.256-.002 1.996-.515 3.62-2.134 3.842-4.957.031-.394.031-13.185-.001-13.587-.236-3.007-2.087-4.74-4.526-5.091-.559-.081-.671-.105-3.539-.11-10.173.005-12.403-.448-14.41 1.633z" fill="url(#SVGID_1_)"/><path d="m11.998 3.139c-3.631 0-7.079-.323-8.396 3.057-.544 1.396-.465 3.209-.465 5.805 0 2.278-.073 4.419.465 5.804 1.314 3.382 4.79 3.058 8.394 3.058 3.477 0 7.062.362 8.395-3.058.545-1.41.465-3.196.465-5.804 0-3.462.191-5.697-1.488-7.375-1.7-1.7-3.999-1.487-7.374-1.487zm-.794 1.597c7.574-.012 8.538-.854 8.006 10.843-.189 4.137-3.339 3.683-7.211 3.683-7.06 0-7.263-.202-7.263-7.265 0-7.145.56-7.257 6.468-7.263zm5.524 1.471c-.587 0-1.063.476-1.063 1.063s.476 1.063 1.063 1.063 1.063-.476 1.063-1.063-.476-1.063-1.063-1.063zm-4.73 1.243c-2.513 0-4.55 2.038-4.55 4.551s2.037 4.55 4.55 4.55 4.549-2.037 4.549-4.55-2.036-4.551-4.549-4.551zm0 1.597c3.905 0 3.91 5.908 0 5.908-3.904 0-3.91-5.908 0-5.908z" fill="#fff"/></svg>
-              </a>
-              <a className="facebook" href="https://www.facebook.com/profile.php?id=61563961290695" aria-label="Facebook">
-                <svg className="float-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><g fillRule="evenodd"><path d="m32 64h-16a16.0007 16.0007 0 0 1 -16-16v-32a16.0007 16.0007 0 0 1 16-16h32a16 16 0 0 1 16 16v32a16 16 0 0 1 -16 16h-6a5 5 0 0 0 -10 0z" fill="#3764b9"/><path d="m30 18h18a9.0006 9.0006 0 0 0 .92-17.954c-.306-.017-.609-.046-.92-.046h-32a16.0007 16.0007 0 0 0 -16 16v32a30.0007 30.0007 0 0 1 30-30" fill="#507dd2"/><path d="m48 32a16 16 0 1 0 16 16v-32a16 16 0 0 1 -16 16" fill="#1e4ba0"/><path d="m52 18a2 2 0 0 1 -2 2h-6a2 2 0 0 0 -2 2v8h7.56a2 2 0 0 1 1.9612 2.392c-.3713 1.857-.8757 4.379-1.2 6a2 2 0 0 1 -1.9612 1.608h-6.36v24h-10v-24h-6a2 2 0 0 1 -2-2v-6a2 2 0 0 1 2-2h6v-8a12 12 0 0 1 12-12h6a2 2 0 0 1 2 2z" fill="#fff"/></g></svg>
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <div className="contact-card">
-          <h3>Envoyez-nous un message</h3>
-          <form method="POST" onSubmit={handleSubmit}>
-            <div className="form-row">
-              <input
-                className="input"
-                type="text"
-                name="lastname"
-                placeholder="Nom"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-              />
-              <input
-                className="input"
-                type="text"
-                name="firstname"
-                placeholder="Prénom"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-              />
-              <select
-                className="select"
-                name="indicatif"
-                value={indicatif}
-                onChange={(e) => setIndicatif(e.target.value)}
-              >
+    <footer id="footer">
+      <div className="contact">
+        <p>Contactez-Nous</p>
+        <form onSubmit={handleSubmit}>
+          <div className="infos">
+            <input
+              type="text"
+              name="lastName"
+              placeholder="Nom"
+              value={formData.lastName}
+              onChange={handleChange}
+              required
+            />
+            <input
+              type="text"
+              name="firstName"
+              placeholder="Prénom"
+              value={formData.firstName}
+              onChange={handleChange}
+              required
+            />
+            <div className="phone">
+              <select name="indicatif" value={formData.indicatif} onChange={handleChange}>
                 <option value="+972">IL +972</option>
                 <option value="+33">FR +33</option>
               </select>
               <input
-                className="input"
                 type="tel"
                 name="phone"
                 placeholder="Téléphone"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
+                value={formData.phone}
+                onChange={handleChange}
+                required
               />
             </div>
-            <textarea
-              className="textarea"
-              name="message"
-              placeholder="Votre message"
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-            ></textarea>
-            <button type="submit" className="submit-btn">Envoyer</button>
-          </form>
-        </div>
-
-        <div className="newsletter">
-          <h3>Newsletter</h3>
-          <p>Recevez nos conseils pratiques et les nouveautés MayHelp (à venir).</p>
-          <div className="newsletter-actions">
-            <input className="input" type="email" placeholder="Votre email" />
-            <button type="button">S'inscrire</button>
           </div>
-        </div>
+          <textarea
+            name="message"
+            placeholder="Comment pouvons-nous vous aider ?"
+            value={formData.message}
+            onChange={handleChange}
+            required
+          ></textarea>
+          <button type="submit" disabled={loading}>
+            {loading ? "Envoi..." : "Envoyer"}
+          </button>
+        </form>
       </div>
 
-      <div className="footer-meta">
-        <div className="conditions">
-          <a href='/conditions'>Conditions générales d'utilisation</a>
-        </div>
+      <div className="reseaux">
+        <a href="https://wa.me/972587396562" target="_blank" rel="noreferrer" title="WhatsApp">
+          <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.008-.57-.008-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" /></svg>
+        </a>
+        <a href="https://www.instagram.com/mayhelp.co.il/" target="_blank" rel="noreferrer" title="Instagram">
+          <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" /></svg>
+        </a>
+        <a href="https://www.facebook.com/profile.php?id=61563961290695" target="_blank" rel="noreferrer" title="Facebook">
+          <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" /></svg>
+        </a>
+      </div>
+
+      <div className="conditions" style={{ textAlign: 'center', marginTop: '30px' }}>
+        <Link to='/conditions'>Conditions générales d'utilisation</Link>
       </div>
     </footer>
   );

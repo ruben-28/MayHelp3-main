@@ -13,7 +13,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/services" element={<Services />} />
           <Route path="/prices" element={<Prices />} />
-          <Route path="/conditions" element={<Conditions/>} />
+          <Route path="/conditions" element={<Conditions />} />
         </Routes>
         <FloatingButtons />
       </BrowserRouter>
